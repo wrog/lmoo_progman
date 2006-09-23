@@ -25,7 +25,7 @@ ProgrammersManual.tex-no-info: ProgrammersManual.texinfo
 	    -e '/^@menu/,/^@end menu/d' \
 	    -e '/^@setfilename/s/info/txt/' \
 	    -e 's/@ref{\([^,}]*,\)*\([^}]*\)}/the section "\2"/' \
-	    -e 's/@pxref{\([^,}]*,\)*\(\(@[a-z]*{[^}]*}\|[^@}]\)*\)}/see "\2"/' \
+	    -e 's/@pxref{\([^,}]*,\)*\([^}]*\)}/see the section "\2"/' \
 	    -e 's/@xref{\([^,}]*,\)*\([^}]*\)}/See the section "\2"/' \
 	    < ProgrammersManual.texinfo > ProgrammersManual.tex-no-info
 
@@ -51,7 +51,7 @@ html/ProgrammersManual_toc.html: ProgrammersManual.texinfo
 	cp -p common.css html
 	@echo ====================
 	@echo Checking for TexInfo commands left in the html...
-	@texi2html -check html/ProgrammersManual_*.html
+	-@texi2html -check html/ProgrammersManual_*.html || echo "Check failed; proceeding anyways."
 	@echo ====================
 
 
@@ -75,6 +75,12 @@ distclean: clean
 	rm -rf html
 
 # $Log: Makefile,v $
+# Revision 1.3  2006/09/23 14:59:06  pschwan
+# - Fixed the "pxref" part of the sed rule that strips texinfo markup
+# - Made the "texi2html -check" part of the .html rule optional, because
+#   apparently there are two common branches of texi2html, and one of them
+#   doesn't implement -check
+#
 # Revision 1.2  2004/06/02 08:20:26  wrog
 # changed .Z targets to .gz targets (no one uses compress anymore, right?)
 # txt target: fixed sed script to be able to deal with cross references
